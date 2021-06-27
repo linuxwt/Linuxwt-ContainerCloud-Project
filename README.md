@@ -9,6 +9,5 @@
 |Etcd|v3.4.13-0|kubernetes|   
 |Calico|v3.19.1|kubernetes|| 
 
-## 二、CI//CD测试
 
 
