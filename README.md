@@ -1,6 +1,6 @@
 # 容器云实践项目
 
-## 一、[容器云](https://linuxwt.com/rong-qi-yun-xiang-mu-kubernetesji-qun-da-jian/)
+## 一、[容器云项目-kubernetes集群部署](https://linuxwt.com/rong-qi-yun-xiang-mu-kubernetesji-qun-da-jian/)
 
 |组件|版本|部署方式|备注|
 |:------|:------|:------|:------|   
