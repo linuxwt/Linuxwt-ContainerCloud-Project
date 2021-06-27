@@ -1,0 +1,8 @@
+apiVersion: kubeadm.k8s.io/v1beta2
+kind: JoinConfiguration
+discovery:
+  bootstrapToken:
+    apiServerEndpoint: 10.0.0.19:6443
+    token: 3py8wm.2q9g0wnij2wayiv2
+    unsafeSkipCAVerification: true
+  tlsBootstrapToken: 3py8wm.2q9g0wnij2wayiv2
