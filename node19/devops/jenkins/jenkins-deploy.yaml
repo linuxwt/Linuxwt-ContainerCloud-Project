@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment 
+metadata: 
+  name: jenkins
+  namespace: devops
+spec: 
+  selector:
+    matchLabels:
+      name: jenkins
+  template: 
+    metadata: 
+      labels: 
+        name: jenkins
+    spec: 
+      serviceAccountName: jenkins
+      containers: 
+      - name: jenkins 
+        image: jenkinsci/blueocean:master
+        imagePullPolicy: IfNotPresent
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 2Gi
+          requests:
+            cpu: 100m
+            memory: 1Gi
+        env:
+        - name: "JENKINS_OPTS"
+          value: "--prefix=/jenkins"
+        ports: 
+        - containerPort: 8080
+        volumeMounts:
+        - name: jenkins
+          mountPath: "/var/jenkins_home"
+        - name: dockersock
+          mountPath: "/var/run/docker.sock"
+        - name: dockercli
+          mountPath: "/usr/bin/docker"
+        - name: dockerdaemon
+          mountPath: /etc/docker/daemon.json
+          subPath: daemon.json
+        - name: mvn-config
+          mountPath: /usr/local/maven/apache-maven-3.5.4/conf/settings.xml
+          subPath: settings.xml
+      volumes:
+      - name: jenkins
+        persistentVolumeClaim:
+          claimName: jenkins-pvc
+      - name: dockersock
+        hostPath:
+          path: /var/run/docker.sock
+      - name: dockercli
+        hostPath:
+          path: /usr/bin/docker
+      - name: mvn-config
+        configMap:
+          name: jenkins-configmap
+          items:
+          - key: settings.xml
+            path: settings.xml
+      - name: dockerdaemon
+        configMap:
+          name: jenkins-configmap
+          items:
+          - key: daemon.json
+            path: daemon.json
+      imagePullSecrets:
+      - name: harbor-secret
+      nodeSelector:
+        app: devops
