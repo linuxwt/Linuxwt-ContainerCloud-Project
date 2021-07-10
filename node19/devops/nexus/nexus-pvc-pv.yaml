@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nexus-pv
+  namespace: devops
+  labels:
+    pv: nexus-pv
+spec:
+  capacity:
+    storage: 15Gi
+  accessModes:
+    - ReadWriteMany   
+  nfs:
+    path: /data/nexus
+    server: 10.0.0.18
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nexus-pvc
+  namespace: devops
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 15Gi
+  selector:
+    matchLabels:
+      pv: "nexus-pv"
+
