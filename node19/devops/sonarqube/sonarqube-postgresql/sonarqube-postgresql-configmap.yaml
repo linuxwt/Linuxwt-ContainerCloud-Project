@@ -6,4 +6,4 @@ metadata:
 data:
   POSTGRES_DB: sonarDB
   POSTGRES_USER: admin
-  POSTGRES_PASSWORD: Qazwsx!23
+  POSTGRES_PASSWORD: 123456
