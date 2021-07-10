@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: sonarqube-database
+  labels:
+    app: sonarqube-database
+  namespace: devops
+spec:
+  serviceName: sonarqube-database
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sonarqube-database
+  template:
+    metadata:
+      labels:
+        app: sonarqube-database
+    spec:
+      serviceAccountName: sonarqube-database
+      containers:
+      - name: sonarqube-database
+        image: postgres:11.4
+        imagePullPolicy: IfNotPresent
+        env:
+          - name: POSTGRES_DB
+            valueFrom:         
+              configMapKeyRef:   
+                name: sonarqube-database-info 
+                key: POSTGRES_DB
+          - name: POSTGRES_USER
+            valueFrom:
+              configMapKeyRef:
+                name: sonarqube-database-info
+                key: POSTGRES_USER
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              configMapKeyRef:
+                name: sonarqube-database-info
+                key: POSTGRES_PASSWORD
+        ports:
+        - containerPort: 5432
+        volumeMounts:
+          - name: data
+            mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: sonarqube-database-pvc
+      nodeSelector:
+        app: devops
