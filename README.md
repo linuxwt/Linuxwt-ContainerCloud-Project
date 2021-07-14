@@ -9,7 +9,7 @@
 |Calico|v3.19.1|kubernetes||    
 
 
-## 二、[容器云项目-CICD工具平台搭建](https://linuxwt.com/rong-qi-yun-xiang-mu/#25sonarqube)   
+## 二、[容器云项目-CICD工具平台搭建](https://linuxwt.com/rong-qi-yun-xiang-mu/)   
 
 |组件|版本|部署方式|备注|
 |:------|:------|:------|:------|   
@@ -19,6 +19,7 @@
 |nexus|3|kubernetes||   
 |sonarqube|lts|kubernetes||   
 
+## 三、[容器云项目-CICD组件配置](https://linuxwt.com/rong-qi-yun-xiang-mu-cicdce-shi-zhun-bei/)  
 
 ## ps:本仓库所有配置是整个平台工具部署配置好后的完整配置，README.md里的每一篇博客文章是重现整个部署过程
 ## 所以很多配置是不完整的，需要将所有文章里的部署配置过程串联起来才可以得到仓库的完整配置
