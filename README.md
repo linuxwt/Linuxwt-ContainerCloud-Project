@@ -25,6 +25,8 @@
 
 ## 五、[容器云项目-CICD组件配置二](https://linuxwt.com/rong-qi-yun-xiang-mu-2/)    
 
+## 六、[容器云项目-持续集成实践(一)](https://linuxwt.com/rong-qi-yun-xiang-mu-chi-xu-ji-cheng-shi-jian/)
+
 ## ps:本仓库所有配置是整个平台工具部署配置好后的完整配置，README.md里的每一篇博客文章是重现整个部署过程
 ## 所以很多配置是不完整的，需要将所有文章里的部署配置过程串联起来才可以得到仓库的完整配置
 
