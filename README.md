@@ -25,7 +25,9 @@
 
 ## 五、[容器云项目-CICD组件配置二](https://linuxwt.com/rong-qi-yun-xiang-mu-2/)    
 
-## 六、[容器云项目-持续集成实践(一)](https://linuxwt.com/rong-qi-yun-xiang-mu-chi-xu-ji-cheng-shi-jian/)
+## 六、[容器云项目-持续集成实践(一)](https://linuxwt.com/rong-qi-yun-xiang-mu-chi-xu-ji-cheng-shi-jian/)   
+
+## 七、[容器云项目-非ingress暴漏的服务配置(cicd部分)](https://linuxwt.com/rong-qi-yun-xiang-mu-3/)
 
 
 
