@@ -27,7 +27,9 @@
 
 ## 六、[容器云项目-持续集成实践(一)](https://linuxwt.com/rong-qi-yun-xiang-mu-chi-xu-ji-cheng-shi-jian/)   
 
-## 七、[容器云项目-非ingress暴漏的服务配置(cicd部分)](https://linuxwt.com/rong-qi-yun-xiang-mu-3/)
+## 七、[容器云项目-非ingress暴漏的服务配置(cicd部分)](https://linuxwt.com/rong-qi-yun-xiang-mu-3/)   
+
+## 八、[容器云项目-动态存储nfs平台部署](https://linuxwt.com/rong-qi-yun-xiang-mu-ri-zhi-gong-ju-ping-tai-bu-shu/)
 
 
 
