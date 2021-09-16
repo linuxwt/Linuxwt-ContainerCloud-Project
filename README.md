@@ -29,7 +29,13 @@
 
 ## 七、[容器云项目-非ingress暴漏的服务配置(cicd部分)](https://linuxwt.com/rong-qi-yun-xiang-mu-3/)   
 
-## 八、[容器云项目-动态存储nfs平台部署](https://linuxwt.com/rong-qi-yun-xiang-mu-ri-zhi-gong-ju-ping-tai-bu-shu/)
+## 八、[容器云项目-动态存储nfs平台部署](https://linuxwt.com/rong-qi-yun-xiang-mu-ri-zhi-gong-ju-ping-tai-bu-shu/)   
+
+## 九、[容器云项目-日志平台部署](https://linuxwt.com/rong-qi-yun-xiang-mu-4/)   
+
+## 十、[容器云项目-日志采集实践(一)](https://linuxwt.com/rong-qi-yun-xiang-mu-ri-zhi-cai-ji-shi-jian-yi/)   
+
+## 十一、[容器云项目-非ingress暴漏的服务配置(elk部分)](https://linuxwt.com/rong-qi-yun-xiang-mu-fei-ingressbao-lou-de-fu-wu-pei-zhi-elkbu-fen/)
 
 
 
