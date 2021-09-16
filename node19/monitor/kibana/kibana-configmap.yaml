@@ -1,0 +1,10 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: kibana-configmap
+  namespace: monitor
+data:
+  kibana.yml: |-
+    server.name: kibana
+    server.host: "0"
+    elasticsearch.hosts: [ "http://elasticsearch-service:9200" ]
