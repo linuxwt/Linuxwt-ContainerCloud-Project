@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test
+  labels:
+    addonmanager.kubernetes.io/mode: Reconcile
+spec:
+  selector:
+    matchLabels:
+      app: test
+  template:
+    metadata:
+      labels:
+        app: test
+    spec:
+      tolerations:
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/app
+      nodeSelector:
+        tool: monitor
+      containers:
+      - name: my-dnsutils
+        image: tutum/dnsutils:latest
+        imagePullPolicy: IfNotPresent
+        command:
+          - sleep
+          - "3600"
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: test
+          mountPath: "/var/log"
+      volumes:
+      - name: test
+        persistentVolumeClaim:
+          claimName: glusterfs-test-default
