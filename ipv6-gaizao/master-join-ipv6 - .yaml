@@ -1,0 +1,15 @@
+apiVersion: kubeadm.k8s.io/v1beta2
+kind: JoinConfiguration
+controlPlane:
+  certificateKey: 7c58c32bb17776dadc4da9f3749f98328868162cfaf80f65ae5d9bbfcc4eda3c
+  localAPIEndpoint:
+    advertiseAddress: 10.235.9.2
+discovery:
+  bootstrapToken:
+    apiServerEndpoint: 10.235.9.40:16443
+    token: "i4x3pa.5mfedqa73ptwoi26"
+    caCertHashes:
+    - "sha256:33dd8d611009d032c01f4781466a14eeda0f67729efb9cb8756dccd3e9a7f733"
+nodeRegistration:
+  kubeletExtraArgs:
+    node-ip: 10.235.9.2,2409:807C:5A06:0001:0000:0000:0104:0902
