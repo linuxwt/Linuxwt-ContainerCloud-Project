@@ -12,4 +12,4 @@ discovery:
     - "sha256:33dd8d611009d032c01f4781466a14eeda0f67729efb9cb8756dccd3e9a7f733"
 nodeRegistration:
   kubeletExtraArgs:
-    node-ip: 10.235.9.2,2409:807C:5A06:0001:0000:0000:0104:0902
+    node-ip: 10.235.9.2,xxxx:0902
