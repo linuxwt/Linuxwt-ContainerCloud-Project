@@ -1,9 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: sonarqube-database-info
-  namespace: devops
-data:
-  POSTGRES_DB: sonarDB
-  POSTGRES_USER: admin
-  POSTGRES_PASSWORD: 123456

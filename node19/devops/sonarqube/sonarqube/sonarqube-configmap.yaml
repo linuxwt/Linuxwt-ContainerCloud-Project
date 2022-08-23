@@ -1,9 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: sonarqube-database-connection-info
-  namespace: devops
-data:
-  SONARQUBE_JDBC_USERNAME: admin
-  SONARQUBE_JDBC_PASSWORD: 123456
-  SONARQUBE_JDBC_URL: jdbc:postgresql://sonarqube-database:5432/sonarDB
