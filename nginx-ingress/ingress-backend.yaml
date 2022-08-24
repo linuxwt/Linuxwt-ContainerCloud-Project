@@ -12,5 +12,5 @@ spec:
       paths:
       - path:
         backend:
-          serviceName: consul-client
-          servicePort: 7100
+          serviceName: default-http-backend
+          servicePort: 80
