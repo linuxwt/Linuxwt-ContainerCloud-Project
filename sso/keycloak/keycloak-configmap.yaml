@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: keycloak-database-connection-info
+  namespace: devops
+data:
+  DB_VENDOR: postgres
+  DB_ADDR: keycloak-database
+  DB_DATABASE: xxxx
+  DB_USER: xxxx
+  DB_PASSWORD: "xxxx"
+  KEYCLOAK_USER: xxxx
+  KEYCLOAK_PASSWORD: xxxx
+  PROXY_ADDRESS_FORWARDING: "true"
