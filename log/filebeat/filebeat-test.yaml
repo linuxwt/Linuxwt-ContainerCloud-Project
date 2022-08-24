@@ -1,0 +1,88 @@
+apiVersion: apps/v1
+kind: Deployment 
+metadata: 
+  name: nginx-gfs
+spec: 
+  replicas: 1
+  selector:
+    matchLabels:
+      name: nginx
+  template: 
+    metadata: 
+      labels: 
+        name: nginx 
+    spec: 
+      containers: 
+        - name: nginx 
+          image: nginx 
+          imagePullPolicy: IfNotPresent
+          ports: 
+            - containerPort: 80
+          volumeMounts:
+            - name: nginx-logs
+              mountPath: /var/log/nginx
+            - name: nginx-conf
+              mountPath: /etc/nginx/nginx.conf
+              subPath: nginx.conf
+            - name: tz-config
+              mountPath: /etc/localtime
+        - name: filebeat
+          image: elastic/filebeat:7.9.1
+          imagePullPolicy: IfNotPresent
+          args: [
+            "-c","/etc/filebeat.yml",
+            "-e",
+          ]
+          resources:
+            limits:
+              memory: 500Mi
+            requests:
+              cpu: 100m
+              memory: 100Mi
+          securityContext:
+            runAsUser: 0
+          volumeMounts:
+            - name: filebeat-conf
+              mountPath: /etc/filebeat.yml
+              subPath: filebeat.yml
+            - name: nginx-logs
+              mountPath: /usr/local/nginx/logs
+            - name: tz-config
+              mountPath: /etc/localtime
+      volumes:
+        - name: nginx-logs
+          emptyDir: {}
+        - name: nginx-conf
+          configMap:
+            name: beat-config
+            items:
+            - key: nginx.conf
+              path: nginx.conf
+        - name: filebeat-conf
+          configMap:
+            name: beat-config
+            items:
+            - key: filebeat.yml
+              path: filebeat.yml
+        - name: tz-config
+          hostPath:
+            path: /usr/share/zoneinfo/Asia/Shanghai
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: nginx-svc
+  labels:
+    glusterfs: nginx-service
+    deploy-nginx: support
+  annotations:
+    description: Exposes Nginx Service
+spec:
+  type: NodePort
+  selector:     
+    name: nginx    
+  ports:
+    - name: nginx
+      port: 80
+      nodePort: 30006
+      targetPort: 80
