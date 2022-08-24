@@ -1,0 +1,119 @@
+pipeline {
+    agent any
+    tools {
+        maven 'maven' 
+    }
+    environment {
+        sendmail = 'yes'
+        recipients = '2847602965@qq.com,1363832871@qq.com'
+    }
+    stages {
+        stage('src checkout') {
+          steps {
+             sh 'rm -Rf *'
+             script {
+                def nodeHome = tool 'node'
+                env.PATH = "${nodeHome}/bin:${env.PATH}"
+                registry_url = "10.0.0.19:30002"
+                checkout([$class: 'GitSCM', branches: [[name: '*/dev']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [],
+                userRemoteConfigs: [[credentialsId: '55cd62f0-58c9-47ac-a9fc-0e77302e5556', url: "http://10.0.0.18:9002/gitlab/mayifan/xj-operation-maintenance.git"]]])
+                       img_name = sh(script: "echo front", returnStdout: true).trim()
+                       def dataObject = readJSON file: 'package.json'
+                       img_tag = "${dataObject.version}"
+                       img = "${img_name}:${img_tag}"
+                        registry_img = "${registry_url}/xj/${img}"
+             }               
+          }
+        }
+
+        stage('sonar analysis') {
+            steps {
+               withSonarQubeEnv('Sonarqube') {
+                  sh'sonar-scanner -Dsonar.projectKey=front -Dsonar.projectName=front -Dsonar.language=js -Dsonar.sources=. -Dsonar.sourceEncoding=UTF-8 -Dsonar.login=8d1beade677d3e63c03295dd5b8c002ca9928f36'
+                }
+            }
+               }
+        stage('src build') {
+            steps {
+                sh 'echo "" > /root/.npmrc'
+                sh "npm config set registry http://nexus-svc:8081/nexus/repository/npm-group/"
+                sh 'echo "//nexus-svc:8081/nexus/repository/npm-group/:_authToken=NpmToken.8e2db5d4-6716-301e-8d40-c8d6564380b3" >> /root/.npmrc'
+                sh 'npm cache clean -f'
+                sh "npm install --loglevel info --unsafe-perm"
+                sh "npm run build"
+            }
+        }
+
+        stage('image build') {
+          steps {
+                 script {
+                     docker.withRegistry("http://${registry_url}",'ce3f3651-056b-4e36-b4ba-158aa8dfdefc') {
+                     def customimage = docker.build("xj/${img}")
+                      customimage.push()
+                      }
+                    }
+                 sh "docker rmi ${registry_img}"
+                  }
+              }
+
+       stage('app deploy') {
+          steps {
+                  sh './deploy.sh'
+                 }
+              }
+    }
+       post{             
+        success {
+            script {
+                if (sendmail == 'yes') {
+               emailext to: "${recipients}", body: '''
+<html>
+               <b style="font-size:12px">(<span style="color:red">本邮件是程序自动下发的，请勿回复</span>)<br></b><hr>
+
+               <b style="font-size: 12px;">项目名称：$PROJECT_NAME<br></b><hr>
+
+               <b style="font-size: 12px;">构建编号：$BUILD_NUMBER<br></b><hr>
+
+               <b style="font-size: 12px;">GIT版本号：${GIT_REVISION}<br></b><hr>
+
+               <b style="font-size: 12px;" >构建状态：<span style="color:red">$BUILD_STATUS</span><br></b><hr>
+
+               <b style="font-size: 12px;">触发原因：${CAUSE}<br></b><hr>
+
+              <b style="font-size: 12px;">构建日志地址：<a href="${BUILD_URL}console">${BUILD_URL}console</a><br></b><hr>
+
+              <b style="font-size: 12px;">构建地址：<a href="$BUILD_URL">$BUILD_URL</a><br></b><hr>
+
+              <b style="font-size: 12px;">变更集:${JELLY_SCRIPT,template="html"}<br></b><hr>
+                     </html>
+                  ''', subject: '${JOB_NAME}' 
+                }
+            }
+        }
+        failure { 
+         emailext to: "${recipients}",body: '''
+               <!DOCTYPE html>
+               <html>
+                   <b style="font-size:12px">(<span style="color:red">本邮件是程序自动下发的，请勿回复</span>)<br></b><hr>
+
+               <b style="font-size: 12px;">项目名称：$PROJECT_NAME<br></b><hr>
+
+               <b style="font-size: 12px;">构建编号：$BUILD_NUMBER<br></b><hr>
+
+               <b style="font-size: 12px;">GIT版本号：${GIT_REVISION}<br></b><hr>
+
+               <b style="font-size: 12px;" >构建状态：<span style="color:red">$BUILD_STATUS</span><br></b><hr>
+
+               <b style="font-size: 12px;">触发原因：${CAUSE}<br></b><hr>
+
+              <b style="font-size: 12px;">构建日志地址：<a href="${BUILD_URL}console">${BUILD_URL}console</a><br></b><hr>
+
+              <b style="font-size: 12px;">构建地址：<a href="$BUILD_URL">$BUILD_URL</a><br></b><hr>
+
+              <b style="font-size: 12px;">变更集:${JELLY_SCRIPT,template="html"}<br></b><hr>
+               </html>
+               ''',subject: '${JOB_NAME}'
+        }
+    }
+
+}
