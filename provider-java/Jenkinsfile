@@ -1,0 +1,46 @@
+pipeline {
+    agent any
+    tools {
+        maven 'maven' 
+    }
+    environment {
+                CI = 'true'
+                 GROUP = readMavenPom().getGroupId()
+                ARTIFACT = readMavenPom().getArtifactId()
+                VERSION = readMavenPom().getVersion()
+    }
+    stages {
+
+        stage('Src Analysis') {
+            steps {
+                withSonarQubeEnv('Sonarqube') {
+                         sh'sonar-scanner -Dsonar.projectKey=provider -Dsonar.projectName=provider -Dsonar.language=java -Dsonar.java.binaries=. -Dsonar.sources=. -Dsonar.sourceEncoding=UTF-8 -Dsonar.login=3d66f5f5fe195d72b1a738a3658fb898a758401a'
+                         }   
+                  }
+           }        
+
+        stage('Src Build') {
+            steps {
+                sh 'mvn clean install'
+            }
+        }
+        stage('Image Build') {
+            steps {
+               script {
+                    docker.withRegistry("http://10.0.0.19:30002",'ce3f3651-056b-4e36-b4ba-158aa8dfdefc') {
+                    def customimage = docker.build("xj/${GROUP}-${ARTIFACT}:${VERSION}")
+                    customimage.push()
+                    }
+                }
+                sh "docker rmi xj/${GROUP}-${ARTIFACT}:${VERSION}"
+                sh "docker rmi 10.0.0.19:30002/xj/${GROUP}-${ARTIFACT}:${VERSION}"
+            }
+        }
+
+      stage('App Deploy') {
+            steps {
+               sh './deploy.sh'
+               } 
+       }
+    }
+}
