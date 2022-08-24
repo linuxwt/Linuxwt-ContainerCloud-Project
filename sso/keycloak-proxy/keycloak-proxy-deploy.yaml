@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment 
+metadata: 
+  name: keycloak-proxy
+  namespace: monitor
+spec: 
+  selector:
+    matchLabels:
+      name: keycloak-proxy
+  template: 
+    metadata: 
+      labels: 
+        name: keycloak-proxy
+    spec: 
+      serviceAccountName: keycloak-proxy
+      hostAliases:
+      - ip: "10.0.0.18"
+        hostnames:
+        - "xj.local"
+      containers: 
+        - name: keycloak-proxy 
+          image: jboss/keycloak-proxy:v1
+          imagePullPolicy: IfNotPresent
+          ports: 
+            - containerPort: 8180
+              name: port1
+            - containerPort: 8443
+              name: port2
+          volumeMounts:
+            - name: keycloak-proxy-config
+              mountPath: /opt/jboss/conf
+            - name: tz-config
+              mountPath: /etc/localtime
+      volumes:
+      - name: keycloak-proxy-config
+        configMap:
+          name: keycloak-proxy-configmap
+      - name: tz-config
+        hostPath:
+          path: /usr/share/zoneinfo/Asia/Shanghai         
+      nodeSelector:
+        app: monitor

@@ -1,0 +1,20 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: keycloak-proxy-svc
+  namespace: monitor
+  labels:
+    nfs: keycloak-proxy-service
+    deploy-keycloak-proxy: support
+  annotations:
+    description: Exposes Nexus Service
+spec:
+  type: NodePort
+  selector:     
+    name: keycloak-proxy    
+  ports:
+    - name: keycloak-proxy
+      port: 8180
+      targetPort: 8180
+      nodePort: 30008
+

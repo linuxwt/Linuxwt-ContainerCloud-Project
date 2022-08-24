@@ -1,0 +1,36 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: keycloak-proxy-configmap
+  namespace: monitor
+data:
+  proxy.json: |-
+      {
+        "target-url": "http://kibana-svc:5601",
+        "bind-address": "0.0.0.0",
+        "http-port": "8180",
+        "applications": [
+          {
+            "base-path": "/",
+            "error-page": "/error.html",
+            "adapter-config": {
+               "realm": "kibana",
+               "auth-server-url": "http://xj.local:30012/auth",
+               "ssl-required": "external",
+               "principal-attribute": "name",
+               "resource": "kibana-client",
+               "credentials": {
+                    "secret": "8bf26b40-1942-4e55-bded-96e7557ee491"
+                }
+             },
+           "constraints": [
+             {
+               "pattern": "/*",
+               "roles-allowed": [
+               "user"
+              ]
+             }
+           ]
+         }
+       ]
+      }
