@@ -75,6 +75,6 @@ spec:
 EOF
 
 apk add sshpass
-sshpass -p 12ZrN\@aQQ7 ssh -o StrictHostKeyChecking=no  10.0.0.19 'if [ -f front.yaml ];then rm -f front.yaml;fi'
-sshpass -p 12ZrN\@aQQ7 scp -o StrictHostKeyChecking=no  front.yaml 10.0.0.19:/root/deploy
-sshpass -p 12ZrN\@aQQ7 ssh -o StrictHostKeyChecking=no  10.0.0.19 'if [ $(kubectl get deploy -n devops | grep front | wc -l) -eq 1 ];then  kubectl delete -n devops deploy front && kubectl delete -n devops svc front-svc &&  kubectl create -f /root/deploy/front.yaml;else kubectl create -f /root/deploy/front.yaml;fi'
+sshpass -p 12ZrN\@axxx ssh -o StrictHostKeyChecking=no  10.0.0.19 'if [ -f front.yaml ];then rm -f front.yaml;fi'
+sshpass -p 12ZrN\@axxx scp -o StrictHostKeyChecking=no  front.yaml 10.0.0.19:/root/deploy
+sshpass -p 12ZrN\@axxx ssh -o StrictHostKeyChecking=no  10.0.0.19 'if [ $(kubectl get deploy -n devops | grep front | wc -l) -eq 1 ];then  kubectl delete -n devops deploy front && kubectl delete -n devops svc front-svc &&  kubectl create -f /root/deploy/front.yaml;else kubectl create -f /root/deploy/front.yaml;fi'
