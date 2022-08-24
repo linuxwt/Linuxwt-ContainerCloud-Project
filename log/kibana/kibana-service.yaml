@@ -1,0 +1,20 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: kibana-svc
+  namespace: monitor
+  labels:
+    nfs: kibana-service
+    deploy-kibana: support
+  annotations:
+    description: Exposes Nexus Service
+spec:
+  type: NodePort
+  selector:     
+    name: kibana    
+  ports:
+    - name: kibana
+      port: 5601
+      targetPort: 5601
+      nodePort: 30005
+

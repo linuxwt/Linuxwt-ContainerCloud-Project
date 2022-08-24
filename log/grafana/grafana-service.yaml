@@ -1,0 +1,19 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: grafana-svc
+  namespace: monitor
+  labels:
+    nfs: grafana-service
+    deploy-grafana: support
+  annotations:
+    description: Exposes Grafana Service
+spec:
+  type: NodePort
+  selector:     
+    name: grafana    
+  ports:
+    - name: grafana
+      port: 3000
+      targetPort: 3000
+      nodePort: 30009

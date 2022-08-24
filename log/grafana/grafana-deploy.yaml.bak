@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment 
+metadata: 
+  name: grafana
+  namespace: monitor
+spec: 
+  selector:
+    matchLabels:
+      name: grafana
+  template: 
+    metadata: 
+      labels: 
+        name: grafana
+    spec: 
+      serviceAccountName: grafana
+      containers: 
+        - name: grafana 
+          image: grafana/grafana:latest
+          imagePullPolicy: IfNotPresent
+          ports: 
+            - containerPort: 3000
+          volumeMounts:
+            - name: grafana-data
+              mountPath: "/var/lib/grafana"
+      volumes:
+      - name: grafana-data
+        persistentVolumeClaim:
+          claimName: grafana-pvc       
+      nodeSelector:
+        app: monitor

@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: elasticsearch-pvc
+  namespace: monitor
+spec:
+  storageClassName: es-nfs
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 15Gi
