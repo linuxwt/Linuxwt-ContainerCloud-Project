@@ -1,0 +1,87 @@
+apiVersion: apps/v1
+kind: Deployment 
+metadata: 
+  name: nginx-gfs
+spec: 
+  replicas: 1
+  selector:
+    matchLabels:
+      name: nginx
+  template: 
+    metadata: 
+      labels: 
+        name: nginx 
+    spec: 
+      containers: 
+        - name: nginx 
+          image: nginx 
+          imagePullPolicy: IfNotPresent
+          ports: 
+            - containerPort: 80
+          volumeMounts:
+            - name: nginx-logs
+              mountPath: /var/log/nginx
+            - name: nginx-conf
+              mountPath: /etc/nginx/nginx.conf
+              subPath: nginx.conf
+            - name: tz-config
+              mountPath: /etc/localtime
+        - name: fluent-nginx
+          image: fluentd:V2.7.0-TZ 
+          imagePullPolicy: IfNotPresent
+          command: ["/bin/sh"]
+          args: ["-c", "fluent-gem install fluent-plugin-record-modifier;fluentd;while true; do sleep 30; done;mkdir -p /usr/local/nginx/logs/access.log.pos"]
+          env:
+            - name: FLUENTD_ARGS
+              value: --no-supervisor -q
+          volumeMounts:
+            - name: fluentd-config-output
+              mountPath: /etc/fluent/config.d/output.conf
+              subPath: output.conf
+            - name: fluentd-config-input
+              mountPath: /etc/fluent/config.d/containers.input.conf
+              subPath: containers.input.conf
+            - name: nginx-logs
+              mountPath: /usr/local/nginx/logs
+      volumes:
+        - name: nginx-logs
+          emptyDir: {}
+        - name: fluentd-config-output
+          configMap:
+            name: fluentd-config
+            items:
+            - key: output.conf
+              path: output.conf
+        - name: fluentd-config-input
+          configMap:
+            name: fluentd-config
+            items:
+            - key: containers.input.conf
+              path: containers.input.conf
+        - name: nginx-conf
+          configMap:
+            name: fluentd-config
+            items:
+            - key: nginx.conf
+              path: nginx.conf
+        - name: tz-config
+          hostPath:
+            path: /usr/share/zoneinfo/Asia/Shanghai
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: nginx-svc
+  labels:
+    glusterfs: nginx-service
+    deploy-nginx: support
+  annotations:
+    description: Exposes Nginx Service
+spec:
+  selector:     
+    name: nginx    
+  ports:
+    - name: nginx
+      port: 80
+      targetPort: 80
