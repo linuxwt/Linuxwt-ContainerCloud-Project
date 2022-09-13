@@ -1,0 +1,45 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: redirect-https
+  namespace: kubernetes-dashboard
+spec:
+  redirectScheme:
+    scheme: https
+    port: "443"
+    permanent: true
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: kubedashboard-http-route
+  namespace: kubernetes-dashboard
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: Host(`kubedashboard.k8s`) && PathPrefix(`/`)
+      kind: Rule
+      services:
+        - name: kubernetes-dashboard
+          port: 443
+      middlewares:
+        - name: redirect-https
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: kubedashboard-https-route
+  namespace: kubernetes-dashboard
+spec:
+  entryPoints:
+    - websecure
+  tls:
+    secretName: kubedashboard.k8s-tls
+  routes:
+    - match: Host(`kubedashboard.k8s`) && PathPrefix(`/`)
+      kind: Rule
+      services:
+        - name: kubernetes-dashboard
+          port: 443
+
