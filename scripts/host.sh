@@ -1,8 +1,6 @@
-host2=$(cat /etc/ansible/hosts | awk '{print $1}' | grep '^10')
+#!/bin/bash   
 
-for p in $host2
-
-do  
-    q=$(echo $p | awk -F "." '{print $4}')
-    ssh $p "hostnamectl set-hostname node${q}"    
+for i in {1..44}
+do
+    echo 10.235.9.$i node$i >> /etc/hosts
 done

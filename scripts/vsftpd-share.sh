@@ -5,7 +5,7 @@ sed -i 's/enforcing/disabled/g' /etc/sysconfig/selinux
 setenforce 0
 
 ############创建自获取包制作共享源################
-for i in ansible haproxy keepalived expect ipvs ntp kubeadm nfs
+for i in ansible haproxy keepalived expect ipvs ntp kubeadm nfs createrepo glusterfs glusterfsgeo glusterfsserver
 
 do
 

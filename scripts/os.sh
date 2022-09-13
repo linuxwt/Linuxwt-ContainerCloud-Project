@@ -1,6 +1,5 @@
 #!/bin/bash
 
-:<<!
 systemctl disable firewalld && systemctl daemon-reload && systemctl status firewalld 
 
 ############关闭swap##############################
@@ -95,6 +94,6 @@ ln -s /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 
 ##################时间同步############################
 yum -y install ntpdate && ntpdate 10.238.94.5
-!
+
 echo "0 0,6,12,18 * * * /usr/sbin/ntpdate 10.238.94.5;/sbin/hwclock -w" >> /etc/crontab
 systemctl restart crond
