@@ -1,0 +1,162 @@
+image:
+  name: traefik
+  tag: ""
+  pullPolicy: IfNotPresent
+deployment:
+  enabled: true
+  kind: DaemonSet
+  replicas: 1
+  terminationGracePeriodSeconds: 60
+  minReadySeconds: 0
+  annotations: {}
+  labels: {}
+  podAnnotations: {}
+  podLabels: {}
+  additionalContainers: []
+  additionalVolumes: []
+  initContainers: []
+  shareProcessNamespace: false
+  imagePullSecrets: []
+podDisruptionBudget:
+  enabled: false
+ingressClass:
+  enabled: false
+  isDefaultClass: false
+  fallbackApiVersion: ""
+pilot:
+  enabled: false
+  token: ""
+experimental:
+  http3:
+    enabled: false
+  plugins:
+    enabled: false
+  kubernetesGateway:
+    enabled: false
+ingressRoute:
+  dashboard:
+    enabled: false
+    annotations: {}
+    labels: {}
+rollingUpdate:
+  maxUnavailable: 1
+  maxSurge: 1
+providers:
+  kubernetesCRD:
+    enabled: true
+    allowCrossNamespace: false
+    allowExternalNameServices: false
+    namespaces: []
+  kubernetesIngress:
+    enabled: true
+    allowExternalNameServices: false
+    namespaces: []
+    publishedService:
+      enabled: false
+volumes: []
+additionalVolumeMounts: []
+logs:
+  general:
+    level: ERROR
+  access:
+    enabled: true
+    filters: 
+      statuscodes: "200,300-302"
+      retryattempts: true
+      minduration: 10ms
+    fields:
+      general:
+        defaultmode: keep
+        names: {}
+      headers:
+        defaultmode: drop
+        names: {}
+metrics:
+  prometheus:
+    entryPoint: metrics
+tracing: 
+  instana:
+    enabled: true
+globalArguments:
+  - "--global.checknewversion"
+  - "--global.sendanonymoususage"
+  - "--serverstransport.insecureskipverify=true"
+additionalArguments: []
+env: []
+envFrom: []
+ports:
+  traefik:
+    port: 9000
+    expose: false
+    exposedPort: 9000
+    protocol: TCP
+  web:
+    port: 8000
+    hostPort: 80
+    expose: false
+    exposedPort: 80
+    protocol: TCP
+  websecure:
+    port: 8443
+    hostPort: 443
+    expose: false
+    exposedPort: 443
+    protocol: TCP
+    tls:
+      enabled: false
+      options: ""
+      certResolver: ""
+      domains: []
+  metrics:
+    port: 9100
+    expose: false
+    exposedPort: 9100
+    protocol: TCP
+tlsOptions: {}
+service:
+  enabled: false
+  type: NodePort
+  annotations: {}
+  annotationsTCP: {}
+  annotationsUDP: {}
+  labels: {}
+  spec: {}
+  loadBalancerSourceRanges: []
+  externalIPs: []
+autoscaling:
+  enabled: false
+persistence:
+  enabled: false
+  name: data
+  accessMode: ReadWriteOnce
+  size: 128Mi
+  path: /data
+  annotations: {}
+hostNetwork: false
+rbac:
+  enabled: true
+  namespaced: false
+podSecurityPolicy:
+  enabled: false
+serviceAccount:
+  name: ""
+serviceAccountAnnotations: {}
+resources: {}
+affinity: {}
+nodeSelector: {
+  node-role.kubernetes.io/edge: "worker"
+}
+tolerations: 
+  - key: "node-role.kubernetes.io/edge"
+    operator: "Exists"
+    effect: "NoSchedule"
+priorityClassName: ""
+securityContext:
+  capabilities:
+    drop: [ALL]
+  readOnlyRootFilesystem: true
+  runAsGroup: 65532
+  runAsNonRoot: true
+  runAsUser: 65532
+podSecurityContext:
+  fsGroup: 65532
