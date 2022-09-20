@@ -1,0 +1,44 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: redirect-https
+  namespace: devops
+spec:
+  redirectScheme:
+    scheme: https
+    port: "443"
+    permanent: true
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: jenkins-http-route
+  namespace: devops
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: Host(`jenkins.k8s`) && PathPrefix(`/`)
+      kind: Rule
+      services:
+        - name: jenkins
+          port: 8080
+      middlewares:
+        - name: redirect-https
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: jenkins-https-route
+  namespace: devops
+spec:
+  entryPoints:
+    - websecure
+  tls:
+    secretName: jenkins.k8s-tls
+  routes:
+    - match: Host(`jenkins.k8s`) && PathPrefix(`/`)
+      kind: Rule
+      services:
+        - name: jenkins
+          port: 8080

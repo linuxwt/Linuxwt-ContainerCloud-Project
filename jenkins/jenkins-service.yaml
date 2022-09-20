@@ -1,0 +1,19 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: jenkins
+  namespace: devops
+  labels:
+    nfs: jenkins-service
+    deploy-jenkins: support
+  annotations:
+    description: Exposes Jenkins Service
+spec:
+  type: ClusterIP
+  selector:     
+    name: jenkins    
+  ports:
+    - name: jenkins
+      port: 8080
+      targetPort: 8080
+      # nodePort: 30080
