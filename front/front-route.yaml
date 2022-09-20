@@ -1,0 +1,44 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: redirect-https
+  namespace: front
+spec:
+  redirectScheme:
+    scheme: https
+    port: "443"
+    permanent: true
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: front-http-route
+  namespace: front
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: Host(`front.k8s`) && PathPrefix(`/`)
+      kind: Rule
+      services:
+        - name: front
+          port: 80
+      middlewares:
+        - name: redirect-https
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: front-https-route
+  namespace: front
+spec:
+  entryPoints:
+    - websecure
+  tls:
+    secretName: front.k8s-tls
+  routes:
+    - match: Host(`front.k8s`) && PathPrefix(`/`)
+      kind: Rule
+      services:
+        - name: front
+          port: 80
