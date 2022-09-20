@@ -1,0 +1,13 @@
+{
+  "kind": "Service",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "glusterfs-harbor-harbor",
+    "namespace": "harbor"
+  },
+  "spec": {
+    "ports": [
+      {"port": 49152}
+    ]
+  }
+}

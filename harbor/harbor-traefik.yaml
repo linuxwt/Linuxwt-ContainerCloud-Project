@@ -1,0 +1,45 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: redirect-https
+  namespace: harbor
+spec:
+  redirectScheme:
+    scheme: https
+    port: "443"
+    permanent: true
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: harbor-http-route
+  namespace: harbor
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: Host(`harbor.k8s`) && PathPrefix(`/`)
+      kind: Rule
+      services:
+        - name: harbor
+          port: 80
+      middlewares:
+        - name: redirect-https
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: harbor-https-route
+  namespace: harbor
+spec:
+  entryPoints:
+    - websecure
+  tls:
+    secretName: harbor.k8s-tls
+  routes:
+    - match: Host(`harbor.k8s`) && PathPrefix(`/`)
+      kind: Rule
+      services:
+        - name: harbor
+          port: 80
+          
