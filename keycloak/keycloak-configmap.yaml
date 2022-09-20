@@ -7,8 +7,8 @@ data:
   DB_VENDOR: postgres
   DB_ADDR: keycloak-database
   DB_DATABASE: keycloak
-  DB_USER: admin
-  DB_PASSWORD: "Qazwsx!23"
-  KEYCLOAK_USER: cmdi
-  KEYCLOAK_PASSWORD: gooalgene
+  DB_USER: xxxx
+  DB_PASSWORD: "xxxx"
+  KEYCLOAK_USER: xxxx
+  KEYCLOAK_PASSWORD: xxxx
   PROXY_ADDRESS_FORWARDING: "true"
