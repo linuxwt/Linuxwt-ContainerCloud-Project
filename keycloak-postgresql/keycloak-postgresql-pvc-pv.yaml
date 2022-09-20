@@ -1,0 +1,54 @@
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: glusterfs-keycloak-database
+  namespace: devops
+subsets:
+- addresses:
+  - ip: 10.235.9.42
+  - ip: 10.235.9.43
+  - ip: 10.235.9.44
+  ports:
+  - port: 49158
+    protocol: TCP
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: glusterfs-keycloak-database
+  namespace: devops
+spec:
+  ports:
+    - port: 49158
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: keycloak-database-glusterfs-pv
+  namespace: devops
+  labels:
+    pv: keycloak-database
+spec:
+  capacity:
+    storage: 100Gi
+  accessModes:
+    - ReadWriteMany
+  glusterfs:
+    endpoints: glusterfs-keycloak-database
+    path: keycloak-database
+    readOnly: false
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: keycloak-database-glusterfs-pvc
+  namespace: devops
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 100Gi
+  selector:
+    matchLabels:
+      pv: "keycloak-database"
