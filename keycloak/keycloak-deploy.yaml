@@ -1,0 +1,81 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: keycloak
+  namespace: devops
+  labels:
+    app: keycloak
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: keycloak
+  template:
+    metadata:
+      labels:
+        app: keycloak
+    spec:
+      serviceAccountName: keycloak
+      containers:
+      - name: keycloak
+        image: 10.235.9.36:30002/library/keycloak/jboss/keycloak:16.1.1
+        ports:
+        - containerPort: 8080
+        env:
+          - name: DB_VENDOR
+            valueFrom:
+              configMapKeyRef:
+                name: keycloak-database-connection-info
+                key: DB_VENDOR
+          - name: DB_ADDR
+            valueFrom:
+              configMapKeyRef:
+                name: keycloak-database-connection-info
+                key: DB_ADDR
+          - name: DB_DATABASE
+            valueFrom:
+              configMapKeyRef:
+                name: keycloak-database-connection-info
+                key: DB_DATABASE
+          - name: DB_USER
+            valueFrom:
+              configMapKeyRef:
+                name: keycloak-database-connection-info
+                key: DB_USER
+          - name: DB_PASSWORD
+            valueFrom:
+              configMapKeyRef:
+                name: keycloak-database-connection-info
+                key: DB_PASSWORD
+          - name: KEYCLOAK_USER
+            valueFrom:
+              configMapKeyRef:
+                name: keycloak-database-connection-info
+                key: KEYCLOAK_USER
+          - name: KEYCLOAK_PASSWORD
+            valueFrom:
+              configMapKeyRef:
+                name: keycloak-database-connection-info
+                key: KEYCLOAK_PASSWORD
+          - name: PROXY_ADDRESS_FORWARDING
+            valueFrom:
+              configMapKeyRef:
+                name: keycloak-database-connection-info
+                key: PROXY_ADDRESS_FORWARDING
+          - name: BIND
+            valueFrom:
+              fieldRef:
+                fieldPath: status.podIP
+        volumeMounts:
+          - name: themes
+            mountPath: /opt/jboss/keycloak/themes
+      volumes:
+        - name: themes
+          persistentVolumeClaim:
+            claimName: keycloak-glusterfs-pvc
+      nodeSelector:
+        tool: monitor
+      tolerations:
+        - key: "node-role.kubernetes.io/app"
+          operator: "Exists"
+          effect: "NoSchedule"

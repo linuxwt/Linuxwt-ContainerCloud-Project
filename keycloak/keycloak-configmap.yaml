@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: keycloak-database-connection-info
+  namespace: devops
+data:
+  DB_VENDOR: postgres
+  DB_ADDR: keycloak-database
+  DB_DATABASE: keycloak
+  DB_USER: admin
+  DB_PASSWORD: "Qazwsx!23"
+  KEYCLOAK_USER: cmdi
+  KEYCLOAK_PASSWORD: gooalgene
+  PROXY_ADDRESS_FORWARDING: "true"
