@@ -1,0 +1,70 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: rancher
+  namespace: cattle-system
+spec:
+  ports:
+    - port: 80
+      targetPort: 1443
+      protocol: TCP
+
+---
+
+kind: Endpoints
+apiVersion: v1
+metadata:
+  name: rancher
+  namespace: cattle-system
+subsets:
+  - addresses:
+      - ip: 10.235.9.41
+    ports:
+      - port: 1443
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: redirect-https
+  namespace: cattle-system
+spec:
+  redirectScheme:
+    scheme: https
+    port: "443"
+    permanent: true
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: rancher-http-route
+  namespace: cattle-system
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: Host(`rancher.k8s`)
+      kind: Rule
+      services:
+        - name: rancher
+          port: 80
+          scheme: https
+      middlewares:
+        - name: redirect-https
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: rancher-https-route
+  namespace: cattle-system
+spec:
+  entryPoints:
+    - websecure
+  tls:
+    secretName: rancher.k8s-tls
+  routes:
+    - match: Host(`rancher.k8s`)
+      kind: Rule
+      services:
+        - name: rancher
+          port: 80
+          scheme: https

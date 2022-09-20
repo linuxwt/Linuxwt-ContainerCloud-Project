@@ -1,0 +1,19 @@
+version: '3'
+services:
+  rancher:
+    restart: always
+    image: 10.235.9.36:30002/library/rancher/rancher:v2.5.9
+    container_name: rancher
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - /etc/timezone:/etc/timezone
+      - /root/var/log/auditlog:/var/log/auditlog
+      - ./data:/var/lib/rancher
+    environment:
+      AUDIT_LEVEL: 3
+      CATTLE_SYSTEM_DEFAULT_REGISTRY: 10.235.9.36:30002/library
+    privileged: true
+    restart: always
+    ports:
+      - "1080:80"
+      - "1443:443"
