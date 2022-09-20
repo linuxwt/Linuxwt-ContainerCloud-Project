@@ -1,0 +1,9 @@
+curl \
+    --request PUT \
+    --header "X-Consul-Token: cd76a0f7-5535-40cc-8696-073462acc6c7" \
+    --data \
+'{
+  "Name": "Agent Token",
+  "Type": "client",
+  "Rules": "node \"\" { policy = \"write\" } service \"\" { policy = \"read\" }"
+}' http://127.0.0.1:8500/v1/acl/create

@@ -1,0 +1,36 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: consul-configmap
+  namespace: guzhangguanli
+data:
+  acl.json: |-
+    {
+      "acl": {
+           "enabled":true,
+           "default_policy":"deny",
+           "enable_token_persistence":true,
+           "tokens":{
+              "master":"cd76a0f7-5535-40cc-8696-073462acc6c7",
+              "agent":"7e0fe150-b308-631e-3acb-d6fcf67dc732"
+           }
+                }
+     }
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: consul-client-configmap
+  namespace: guzhangguanli
+data:
+  acl.json: |-
+    {
+      "acl": {
+           "enabled":true,
+           "default_policy":"deny",
+           "enable_token_persistence":true,
+           "tokens":{
+             "agent":"7e0fe150-b308-631e-3acb-d6fcf67dc732"
+           }
+                }
+     }

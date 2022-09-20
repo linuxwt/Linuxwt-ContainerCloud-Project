@@ -1,0 +1,46 @@
+{
+  "kind": "Endpoints",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "glusterfs-consul-guzhangguanli",
+    "namespace": "guzhangguanli"
+  },
+  "subsets": [
+    {
+      "addresses": [
+        {
+          "ip": "10.235.9.42"
+        }
+      ],
+      "ports": [
+        {
+          "port": 1990
+        }
+      ]
+    },
+   {
+      "addresses": [
+        {
+          "ip": "10.235.9.43"
+        }
+      ],
+      "ports": [
+        {
+          "port": 1990
+        }
+      ]
+    },
+    {
+      "addresses": [
+        {
+          "ip": "10.235.9.44"
+        }
+      ],
+      "ports": [
+        {
+          "port": 1990
+        }
+      ]
+    }
+  ]
+}
