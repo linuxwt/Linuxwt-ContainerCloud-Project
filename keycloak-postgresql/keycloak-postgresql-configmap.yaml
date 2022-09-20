@@ -5,5 +5,5 @@ metadata:
   namespace: devops
 data:
   POSTGRES_DB: keycloak
-  POSTGRES_USER: admin
-  POSTGRES_PASSWORD: Qazwsx!23
+  POSTGRES_USER: xxxx
+  POSTGRES_PASSWORD: xxxx
