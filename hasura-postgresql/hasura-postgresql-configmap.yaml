@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: hasura-database-info
+  namespace: front
+data:
+  POSTGRES_DB: hasura
+  POSTGRES_USER: admin
+  POSTGRES_PASSWORD: Qazwsx!23

@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: hasura-database-nodeport
+  namespace: front
+  labels:
+    app: hasura-database
+spec:
+  type: NodePort
+  ports:
+    - port: 5432
+      targetPort: 5432
+      nodePort: 30009
+  selector:
+    app: hasura-database
