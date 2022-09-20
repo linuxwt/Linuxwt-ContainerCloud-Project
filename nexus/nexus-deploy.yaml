@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment 
+metadata: 
+  name: nexus
+  namespace: devops
+spec: 
+  selector:
+    matchLabels:
+      name: nexus
+  template: 
+    metadata: 
+      labels: 
+        name: nexus
+    spec: 
+      serviceAccountName: nexus
+      containers: 
+        - name: nexus 
+          image: 10.235.9.36:30002/library/nexus3/sonatype/nexus3:latest
+          imagePullPolicy: IfNotPresent
+          # env:
+            # - name: NEXUS_CONTEXT
+              # value: nexus
+          ports: 
+            - containerPort: 8081
+            - containerPort: 8082
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 2Gi
+            requests:
+              cpu: 100m
+              memory: 1Gi
+          volumeMounts:
+            - name: nexus
+              mountPath: "/nexus-data"
+      volumes:
+      - name: nexus
+        persistentVolumeClaim:
+          claimName: nexus-glusterfs-pvc
+      nodeSelector:
+        tool: monitor
+      tolerations:
+        - key: "node-role.kubernetes.io/app"
+          operator: "Exists"
+          effect: "NoSchedule"
