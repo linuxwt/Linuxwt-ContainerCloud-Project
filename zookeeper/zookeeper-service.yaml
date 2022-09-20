@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: zookeeper
+  namespace: guzhangguanli
+  labels:
+    app: zookeeper
+spec:
+  ports:
+  - port: 2888
+    name: server
+  - port: 3888
+    name: leader-election
+  selector:
+    app: zookeeper
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: zookeeper-client
+  namespace: guzhangguanli
+  labels:
+    app: zookeeper
+spec:
+  ports:
+  - port: 2181
+    name: client
+    nodePort: 30081
+  selector:
+    app: zookeeper
+  type: NodePort
+---
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: zookeeper-pdb
+  namespace: guzhangguanli
+spec:
+  selector:
+    matchLabels:
+      app: zookeeper
+  maxUnavailable: 1
