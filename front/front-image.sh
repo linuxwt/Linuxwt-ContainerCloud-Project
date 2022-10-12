@@ -20,6 +20,6 @@ docker rmi -f 10.235.9.36:30002/library/front:latest
 mv dist.zip dist.zip-$tag
 mv dist dist-$tag
 mv dist.tar.gz dist.tar.gz-$tag
-kubectl apply -f front-deployment.yaml
+kubectl rollout restart deployment -n front front
 sleep 30
 kubectl get po -n front  | grep front
