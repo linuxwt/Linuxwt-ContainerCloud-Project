@@ -1,0 +1,21 @@
+FROM amazonlinux:2
+
+ENV TZ=Asia/Shanghai
+
+RUN set -eux && \
+    yum update -y && \
+    yum install -y ca-certificates fontconfig glibc-langpack-zh && \
+    yum install -y unzip tar curl bash wget net-tools telnet procps iputils bind-utils traceroute && \
+    wget -q https://mirrors.huaweicloud.com/java/jdk/8u202-b08/jdk-8u202-linux-x64.tar.gz -O /tmp/jdk.tar.gz && \
+    mkdir -p /opt/java && \
+    tar -zxf /tmp/jdk.tar.gz --strip-components 1 -C /opt/java && \
+    rm /tmp/jdk.tar.gz -rf && \
+    rm -rf /var/cache/yum/* && \
+    ln -fs /usr/share/zoneinfo/${TZ} /etc/localtime && \
+    echo ${TZ} > /etc/timezone && \
+    echo 'export JAVA_HOME=/opt/java' > /etc/profile.d/20locale.sh && \
+    echo 'export LANG=zh_CN.UTF-8' >> /etc/profile.d/20locale.sh && \
+    echo 'export PATH=/opt/java/bin:$PATH' >> /etc/profile.d/20locale.sh
+ENV JAVA_HOME=/opt/java \
+    LANG=zh_CN.UTF-8 \
+    PATH=/opt/java/bin:$PATH

@@ -1,0 +1,14 @@
+services:
+  zllms-admin:
+    image: jdk:8
+    container_name: zllms-admin
+    restart: always
+    environment:
+      JAVA_TOOL_OPTIONS: -Xmx1500M -Xms1500M -Xmn512M -Xss256k -XX:+ExplicitGCInvokesConcurrent -XX:+UseCMSInitiatingOccupancyOnly -XX:+UseConcMarkSweepGC -XX:+UseParNewGC -XX:+CMSParallelRemarkEnabled  -XX:CMSFullGCsBeforeCompaction=0 -XX:+CMSClassUnloadingEnabled -XX:LargePageSizeInBytes=128M -XX:+UseFastAccessorMethods -XX:CMSInitiatingOccupancyFraction=70 -XX:SoftRefLRUPolicyMSPerMB=0 -XX:+PrintClassHistogram -XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:+PrintGCTimeStamps -XX:+PrintHeapAtGC -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/root -XX:+ExitOnOutOfMemoryError -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false
+      JAVA_OPTS: -noverify -server -Dspring.profiles.active=test -Dspring.config.additional-location=/root/application-test.yml
+      APP_HOME: /root
+    ports:
+      - "30005:8091"
+    volumes:
+      - ./zllms-admin:/root
+    command: ["bash", "/root/run.sh"]

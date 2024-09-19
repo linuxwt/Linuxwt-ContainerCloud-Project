@@ -1,0 +1,13 @@
+services:
+  aig:
+    image: xxxx/aig:hotfix-created-v2
+    container_name: aig
+    restart: always
+    environment:
+      TZ: Asia/Shanghai
+    ports:
+      - "30011:80"
+    volumes:
+      - ./aig/config:/opt/run/config
+      - ./aig/records:/opt/run/records
+    command: ["/opt/run/aig", "server", "-c", "config/test.yaml"]

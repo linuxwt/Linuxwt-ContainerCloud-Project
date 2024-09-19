@@ -1,0 +1,13 @@
+services:
+   nginx:
+    image: nginx:1.27-alpine
+    container_name: nginx
+    restart: always
+    environment:
+      TZ: Asia/Shanghai
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/logs:/var/log/nginx
+      - ./nginx/html:/usr/share/nginx/html
